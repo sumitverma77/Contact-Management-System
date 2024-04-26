@@ -1,9 +1,6 @@
 package com.example.contact_management_system.controller;
 
-import com.example.contact_management_system.request.AddRequest;
-import com.example.contact_management_system.request.DeleteRequest;
-import com.example.contact_management_system.request.SearchByNameRequest;
-import com.example.contact_management_system.request.SearchByPhoneRequest;
+import com.example.contact_management_system.request.*;
 import com.example.contact_management_system.response.AddResponse;
 import com.example.contact_management_system.response.DeleteResponse;
 import com.example.contact_management_system.entity.EmployeeContactDetails;
@@ -39,6 +36,11 @@ public class Contacts {
     public List<EmployeeContactDetails> searchByPhone(@RequestBody SearchByPhoneRequest searchByPhoneRequest)
     {
         return contactService.searchByPhone(searchByPhoneRequest);
+    }
+    @GetMapping("search/both")
+    public List<EmployeeContactDetails>searchByBoth(@RequestBody SearchByBothRequest searchByBothRequest)
+    {
+        return contactService.searchByBoth(searchByBothRequest);
     }
 
 }

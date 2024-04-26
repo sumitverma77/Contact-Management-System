@@ -1,11 +1,9 @@
 package com.example.contact_management_system.service;
 
+import ch.qos.logback.core.model.conditional.ElseModel;
 import com.example.contact_management_system.builder.DTOConverter;
 import com.example.contact_management_system.constant.messageConstant;
-import com.example.contact_management_system.request.AddRequest;
-import com.example.contact_management_system.request.DeleteRequest;
-import com.example.contact_management_system.request.SearchByNameRequest;
-import com.example.contact_management_system.request.SearchByPhoneRequest;
+import com.example.contact_management_system.request.*;
 import com.example.contact_management_system.response.AddResponse;
 import com.example.contact_management_system.response.DeleteResponse;
 import com.example.contact_management_system.entity.EmployeeContactDetails;
@@ -13,8 +11,8 @@ import com.example.contact_management_system.repo.ContactRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 @Service
 public class ContactService {
     @Autowired
@@ -57,5 +55,15 @@ public List<EmployeeContactDetails> searchByName(SearchByNameRequest searchByNam
 public  List<EmployeeContactDetails> searchByPhone(SearchByPhoneRequest searchByPhoneRequest) {
     List<EmployeeContactDetails> employeeContactDetails=contactRepo.findAllByPhoneStartingWith(searchByPhoneRequest.getPrefix());
     return  employeeContactDetails;
+}
+public List<EmployeeContactDetails> searchByBoth(SearchByBothRequest searchByBothRequest)
+{
+    List<EmployeeContactDetails> allContactsByPhone= contactRepo.findAllByPhoneStartingWith(searchByBothRequest.getPrefix());
+    List<EmployeeContactDetails> allContactsByName=contactRepo.findAllByNameStartingWith(searchByBothRequest.getPrefix());
+    Set<EmployeeContactDetails>set = new HashSet<>();
+    set.addAll(allContactsByPhone);
+    set.addAll(allContactsByName);
+    List<EmployeeContactDetails>uniqueContacts= new ArrayList<>(set);
+    return uniqueContacts;
 }
 }
