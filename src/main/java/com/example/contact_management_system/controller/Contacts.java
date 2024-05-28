@@ -42,5 +42,5 @@ public class Contacts {
     {
         return contactService.searchByBoth(searchByBothRequest);
     }
-
+// intital commit for feature 2
 }
