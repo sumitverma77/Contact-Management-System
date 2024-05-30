@@ -1,13 +1,14 @@
 package com.example.contact_management_system.service;
 
-import ch.qos.logback.core.model.conditional.ElseModel;
 import com.example.contact_management_system.builder.DTOConverter;
 import com.example.contact_management_system.constant.messageConstant;
+import com.example.contact_management_system.entity.TrieContact;
 import com.example.contact_management_system.request.*;
 import com.example.contact_management_system.response.AddResponse;
 import com.example.contact_management_system.response.DeleteResponse;
 import com.example.contact_management_system.entity.EmployeeContactDetails;
 import com.example.contact_management_system.repo.ContactRepo;
+import com.example.contact_management_system.response.TrieAddResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.*;
 public class ContactService {
     @Autowired
     private ContactRepo contactRepo;
+    private TrieContact root = new TrieContact();
     public AddResponse  addService(AddRequest addRequest)
     {
         AddResponse addResponse = new AddResponse();
@@ -65,5 +67,35 @@ public List<EmployeeContactDetails> searchByBoth(SearchByBothRequest searchByBot
     set.addAll(allContactsByName);
     List<EmployeeContactDetails>uniqueContacts= new ArrayList<>(set);
     return uniqueContacts;
+}
+public TrieAddResponse addInTrie(AddRequest addRequest)
+{
+
+    TrieAddResponse trieAddResponse = new TrieAddResponse();
+    String phone = addRequest.getPhone();
+    String name = addRequest.getName();
+  //  TrieContact root = new TrieContact();
+    TrieContact curr = root;
+
+    for(int i=0;i<phone.length();i++)
+    {
+       curr.setInPhoneMap(phone.charAt(i));
+       curr=curr.getPhoneNext(phone.charAt(i));
+    }
+    if(curr.isEnd==true)
+    {
+        trieAddResponse.setMsg(messageConstant.alreadyPresent);
+        return trieAddResponse;
+    }
+    curr.isEnd=true;
+    curr.setNameInEnd(name);
+    curr=root;
+   for(int i=0;i< name.length();i++)
+   {
+       curr.setInNameMap(name.charAt(i));
+       curr=curr.getNameNext(name.charAt(i));
+   }
+   trieAddResponse.setMsg(messageConstant.savedSeccessfully);
+   return trieAddResponse;
 }
 }

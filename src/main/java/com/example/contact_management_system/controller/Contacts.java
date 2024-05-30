@@ -4,6 +4,7 @@ import com.example.contact_management_system.request.*;
 import com.example.contact_management_system.response.AddResponse;
 import com.example.contact_management_system.response.DeleteResponse;
 import com.example.contact_management_system.entity.EmployeeContactDetails;
+import com.example.contact_management_system.response.TrieAddResponse;
 import com.example.contact_management_system.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,5 +43,9 @@ public class Contacts {
     {
         return contactService.searchByBoth(searchByBothRequest);
     }
-// intital commit for feature 2
+    @PostMapping("trie/add")
+    public TrieAddResponse addInTrie(@RequestBody AddRequest addRequest)
+    {
+       return contactService.addInTrie(addRequest);
+    }
 }
