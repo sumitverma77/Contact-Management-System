@@ -9,6 +9,7 @@ import com.example.contact_management_system.response.DeleteResponse;
 import com.example.contact_management_system.entity.EmployeeContactDetails;
 import com.example.contact_management_system.repo.ContactRepo;
 import com.example.contact_management_system.response.TrieAddResponse;
+import com.example.contact_management_system.response.TrieSearchResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,7 +75,6 @@ public TrieAddResponse addInTrie(AddRequest addRequest)
     TrieAddResponse trieAddResponse = new TrieAddResponse();
     String phone = addRequest.getPhone();
     String name = addRequest.getName();
-  //  TrieContact root = new TrieContact();
     TrieContact curr = root;
 
     for(int i=0;i<phone.length();i++)
@@ -82,20 +82,79 @@ public TrieAddResponse addInTrie(AddRequest addRequest)
        curr.setInPhoneMap(phone.charAt(i));
        curr=curr.getPhoneNext(phone.charAt(i));
     }
-    if(curr.isEnd==true)
+    if(curr.isPhoneEnd==true)
     {
         trieAddResponse.setMsg(messageConstant.alreadyPresent);
         return trieAddResponse;
     }
-    curr.isEnd=true;
+    curr.isPhoneEnd=true;
     curr.setNameInEnd(name);
+    curr.setPhoneInEnd(phone);
     curr=root;
    for(int i=0;i< name.length();i++)
    {
        curr.setInNameMap(name.charAt(i));
        curr=curr.getNameNext(name.charAt(i));
    }
+   curr.setPhoneInEnd(phone);
+   curr.setNameInEnd(name);
+   curr.isNameEnd=true;
    trieAddResponse.setMsg(messageConstant.savedSeccessfully);
    return trieAddResponse;
 }
+
+public List<TrieSearchResponse> search(SearchByBothRequest searchByBothRequest)
+{
+    List<TrieSearchResponse> results = new ArrayList<>();
+    String prefix = searchByBothRequest.getPrefix();
+    TrieContact curr= root;
+    for(int i=0;i<prefix.length();i++)
+    {
+       TrieContact next=curr.getPhoneNext(prefix.charAt(i));
+        curr=next;
+        if(next==null)
+            break;
+    }
+    if(curr!=null)
+    {
+        searchInPhoneMap(curr, results);
+    }
+    curr=root;
+    for(int i=0;i<prefix.length();i++)
+    {
+        TrieContact next=curr.getNameNext(prefix.charAt(i));
+        curr=next;
+        if(next==null)
+            break;
+    }
+    if(curr!=null)
+    {
+        searchInNameMap(curr , results);
+    }
+    return results;
+}
+    private void searchInPhoneMap(TrieContact node , List<TrieSearchResponse> result) {
+        if (node.isPhoneEnd) {
+            TrieSearchResponse trieSearchResponse = new TrieSearchResponse();
+            trieSearchResponse.setName(node.getNameInEnd());
+            trieSearchResponse.setPhone(node.getPhoneInEnd());
+            result.add(trieSearchResponse);
+        }
+        for (Character key : node.getPhone().keySet()) {
+            TrieContact nextNode = node.getPhone().get(key);
+            searchInPhoneMap(nextNode, result);
+        }
+    }
+    private void searchInNameMap(TrieContact node , List<TrieSearchResponse> result) {
+        if (node.isNameEnd) {
+            TrieSearchResponse trieSearchResponse = new TrieSearchResponse();
+            trieSearchResponse.setName(node.getNameInEnd());
+            trieSearchResponse.setPhone(node.getPhoneInEnd());
+            result.add(trieSearchResponse);
+        }
+        for (Character key : node.getName().keySet()) {
+            TrieContact nextNode = node.getName().get(key);
+            searchInNameMap(nextNode, result);
+        }
+    }
 }

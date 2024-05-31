@@ -1,11 +1,14 @@
 package com.example.contact_management_system.entity;
 
 import com.example.contact_management_system.response.TrieAddResponse;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashMap;
 public class TrieContact {
+    @Getter
    private HashMap<Character ,TrieContact>name = new HashMap<>();
+    @Getter
    private HashMap<Character , TrieContact> phone = new HashMap<>();
    public void setInPhoneMap(char key)
    {
@@ -24,9 +27,12 @@ public class TrieContact {
         return phone.get(key);
     }
 
+  @Getter
   @Setter
   private   String phoneInEnd;
+   @Getter
    @Setter
    private  String nameInEnd;
-    public boolean isEnd=false;
+    public boolean isNameEnd=false;
+    public boolean isPhoneEnd=false;
 }
