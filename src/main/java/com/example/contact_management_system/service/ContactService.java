@@ -145,7 +145,8 @@ public List<TrieSearchResponse> search(SearchByBothRequest searchByBothRequest)
             searchInPhoneMap(nextNode, result);
         }
     }
-    private void searchInNameMap(TrieContact node , List<TrieSearchResponse> result) {
+    private void searchInNameMap(TrieContact node , List<TrieSearchResponse> result)
+    {
         if (node.isNameEnd) {
             TrieSearchResponse trieSearchResponse = new TrieSearchResponse();
             trieSearchResponse.setName(node.getNameInEnd());
@@ -157,4 +158,63 @@ public List<TrieSearchResponse> search(SearchByBothRequest searchByBothRequest)
             searchInNameMap(nextNode, result);
         }
     }
+    public DeleteResponse deleteInTrie(DeleteRequestInTrie deleteRequestInTrie)
+    {
+        DeleteResponse deleteResponse = new DeleteResponse();
+        TrieContact phonePtr = root;
+        TrieContact namePtr = root;
+        String phone = deleteRequestInTrie.getPhone();
+        Stack<TrieContact>phoneStack = new Stack<>();
+        Stack<TrieContact>nameStack = new Stack<>();
+        for(int i=0;i<phone.length();i++)
+        {
+            phonePtr=phonePtr.getPhoneNext(phone.charAt(i));
+            phoneStack.push(phonePtr);
+            if(phonePtr==null)
+            {
+                deleteResponse.setMsg(messageConstant.contactNotPresent);
+                return deleteResponse;
+            }
+        }
+        if(phonePtr.isPhoneEnd==false) {
+            deleteResponse.setMsg(messageConstant.contactNotPresent);
+            return deleteResponse;
+        }
+        String nameToDelete=phonePtr.getNameInEnd();
+        phonePtr.setPhoneInEnd(null);
+        phonePtr.setNameInEnd(null);
+         phonePtr.isPhoneEnd=false;
+        if (phonePtr.getPhone().isEmpty()) {
+
+            for (int i = phone.length() - 1; i >= 0; i--) {
+                TrieContact parent = phoneStack.pop();
+                parent.getPhone().remove(phone.charAt(i));
+                if (!parent.getPhone().isEmpty() || parent.isPhoneEnd) {
+                    break;
+                }
+            }
+        }
+         for(int i=0;i<nameToDelete.length();i++)
+         {
+             namePtr=namePtr.getNameNext(nameToDelete.charAt(i));
+             nameStack.push(namePtr);
+         }
+         namePtr.setPhoneInEnd(null);
+         namePtr.setNameInEnd(null);
+         namePtr.isNameEnd=false;
+         namePtr.isPhoneEnd=false;
+        if (namePtr.getName().isEmpty()) {
+
+            for (int i = nameToDelete.length() - 1; i >= 0; i--) {
+                TrieContact parent = nameStack.pop();
+                parent.getName().remove(nameToDelete.charAt(i));
+                if (!parent.getName().isEmpty() || parent.isNameEnd) {
+                    break;
+                }
+            }
+        }
+        deleteResponse.setMsg(messageConstant.deltedsuccessfully);
+        return deleteResponse;
+    }
+
 }

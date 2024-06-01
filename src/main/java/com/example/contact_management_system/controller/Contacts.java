@@ -54,6 +54,10 @@ public class Contacts {
     {
         return contactService.search(searchByBothRequest);
     }
+    @GetMapping("trie/delete")
+    public DeleteResponse deleteInTrie (@RequestBody DeleteRequestInTrie deleteRequestInTrie) {
+    return contactService.deleteInTrie(deleteRequestInTrie);
+    }
 
 
 }
