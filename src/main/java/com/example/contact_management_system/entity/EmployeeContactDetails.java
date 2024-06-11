@@ -3,10 +3,12 @@ package com.example.contact_management_system.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 @Entity
 @Table(name = "contacts")
-public class EmployeeContactDetails {
+public class EmployeeContactDetails implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
