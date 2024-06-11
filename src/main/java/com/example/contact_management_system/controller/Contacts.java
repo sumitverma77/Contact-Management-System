@@ -39,7 +39,7 @@ public class Contacts {
     {
         return contactService.searchByPhone(searchByPhoneRequest);
     }
-    @GetMapping("search/both")
+    @PostMapping("search/both")
     public List<EmployeeContactDetails>searchByBoth(@RequestBody SearchByBothRequest searchByBothRequest)
     {
         return contactService.searchByBoth(searchByBothRequest);
