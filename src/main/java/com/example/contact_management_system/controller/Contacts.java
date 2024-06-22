@@ -7,9 +7,18 @@ import com.example.contact_management_system.entity.EmployeeContactDetails;
 import com.example.contact_management_system.response.TrieAddResponse;
 import com.example.contact_management_system.response.TrieSearchResponse;
 import com.example.contact_management_system.service.ContactService;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -57,6 +66,10 @@ public class Contacts {
     @GetMapping("trie/delete")
     public DeleteResponse deleteInTrie (@RequestBody DeleteRequestInTrie deleteRequestInTrie) {
     return contactService.deleteInTrie(deleteRequestInTrie);
+    }
+    @PostMapping(value = "qr/encode", produces = MediaType.IMAGE_PNG_VALUE)
+    public  BufferedImage qrEncode(@RequestBody EncodeQrRequest encodeQrRequest) throws WriterException {
+        return contactService.encodeQr(encodeQrRequest);
     }
 
 

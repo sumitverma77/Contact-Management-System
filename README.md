@@ -7,6 +7,8 @@ The Contact Management System is a RESTful API service that allows users to mana
 3. Search by Name
 4. Search by Phone
 5. Search by Both
+6. Implemented the above features using Trie Data structure without using Database
+7. Generate Qr code for any contact 
 ## Dependencies
 * Spring Boot Starter Data JPA
 *  Spring Boot Starter Web
@@ -14,13 +16,14 @@ The Contact Management System is a RESTful API service that allows users to mana
 *  Spring Boot Starter Test
 * JUnit
 * Lombok
+* Zxing
 
 ## Contributing
 
 Contributions to the Contact Management System are welcome! If you find any issues or have suggestions for improvements, please open an issue or create a pull request.
 
 ## Upcoming Features
-Planning to implement the same features using Trie Data structure without using database.
+looking forward to your suggestions 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
